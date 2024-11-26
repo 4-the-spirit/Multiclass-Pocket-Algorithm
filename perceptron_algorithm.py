@@ -38,6 +38,7 @@ class PerceptronAlgorithm:
   def classify(self, x):
     return np.sign(np.dot(self.weights_vec, x) + self.b)
 
+  @property
   def error_rate(self):
     misclassified = 0
     for i in range(len(self.training_data)):
