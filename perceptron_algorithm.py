@@ -29,7 +29,7 @@ class PerceptronAlgorithm:
         epochs_count += 1
       if updates_count >= updates or epochs_count >= max_epochs:
         break
-        
+
       actual_label = self.training_labels[i]
       predicted_label = self.classify(self.training_data[i])
       # Update the weights only if the predicted label
@@ -40,6 +40,7 @@ class PerceptronAlgorithm:
         self.weights_vec = self.weights_vec + yt * xt
         self.b = self.b + yt
         updates_count += 1
+        print(f"Perceptron Algorithm: {round((updates_count / updates) * 100, 2)} %")
     return None
 
   def classify(self, x):
