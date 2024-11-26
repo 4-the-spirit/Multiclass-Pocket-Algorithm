@@ -9,7 +9,7 @@ class PocketAlgorithm(PerceptronAlgorithm):
 
   def run(self, updates, max_epochs=1):
     """
-    For each interation in the Pocket Algorithm in which the weights vector is updated
+    For each iteration in the Pocket Algorithm in which the weights vector is updated
     this method will execute until it reaches the number of updates or until the number
     of maximum epochs was reached.
     """
@@ -25,12 +25,12 @@ class PocketAlgorithm(PerceptronAlgorithm):
 
       old_weights_vec = perceptron.weights_vec.copy()
       old_b = perceptron.b
-      
+
       perceptron.run(updates=1, max_epochs=1)
 
       new_weights_vec = perceptron.weights_vec.copy()
       new_b = perceptron.b
- 
+
       old_error_rate = perceptron.from_parameters(old_weights_vec, old_b).error_rate
       new_error_rate = perceptron.from_parameters(new_weights_vec, new_b).error_rate
 
@@ -38,7 +38,10 @@ class PocketAlgorithm(PerceptronAlgorithm):
         perceptron.weights_vec = new_weights_vec
         perceptron.b = new_b
         updates_count += 1
-        
+        print(f"Pocket Algorithm: {round((updates_count / updates) * 100, 2)} %")
+
       self.weights_vec = perceptron.weights_vec
       self.b = perceptron.b
+
     return None
+
