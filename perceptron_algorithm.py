@@ -1,3 +1,5 @@
+import itertools
+import numpy as np
 
 
 class PerceptronAlgorithm:
@@ -13,16 +15,21 @@ class PerceptronAlgorithm:
     self.weights_vec = np.zeros(len(self.training_data[0]))
     self.b = 0
 
-  def from_parameters(self, weight_vec, b):
-    self.weights_vec = weight_vec
-    self.b = b
-    return self
+  def from_parameters(self, weights_vec, b):
+    perceptron = PerceptronAlgorithm(self.training_data, self.training_labels)
+    perceptron.weights_vec = weights_vec
+    perceptron.b = b
+    return perceptron
 
-  def run(self, iterations):
-    iterations_count = 0
+  def run(self, updates, max_epochs=1):
+    updates_count = 0
+    epochs_count = 0
     for i in itertools.cycle(range(len(self.training_data))):
-      if iterations_count >= iterations:
+      if i == len(self.training_data) - 1:
+        epochs_count += 1
+      if updates_count >= updates or epochs_count >= max_epochs:
         break
+        
       actual_label = self.training_labels[i]
       predicted_label = self.classify(self.training_data[i])
       # Update the weights only if the predicted label
@@ -32,7 +39,7 @@ class PerceptronAlgorithm:
         xt = self.training_data[i]
         self.weights_vec = self.weights_vec + yt * xt
         self.b = self.b + yt
-      iterations_count += 1
+        updates_count += 1
     return None
 
   def classify(self, x):
