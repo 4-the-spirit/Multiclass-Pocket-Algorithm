@@ -3,13 +3,14 @@ from pocket_algorithm import PocketAlgorithm
 
 class MultiClassPocketAlgorithm:
   def __init__(self, training_data, regular_training_labels):
-    self.training_data = training_data
-    self.regular_training_labels = regular_training_labels
+    self._training_data = training_data
+    self._regular_training_labels = regular_training_labels
 
     self._classification_classes = None
     self._weights_vec = None
     self._b = None
-    
+    self._error_rate = None
+
   @property
   def classification_classes(self):
     if self._classification_classes is None:
@@ -35,6 +36,24 @@ class MultiClassPocketAlgorithm:
   @b.setter
   def b(self, value):
     self._b = value
+
+  @property
+  def error_rate(self):
+    if self._error_rate is None:  
+      misclassified = 0
+      for i in range(len(self.training_data)):
+        if self.classify(self.training_data[i]) != self.regular_training_labels[i]:
+          misclassified += 1
+      self._error_rate = misclassified / len(self.training_data)
+    return self._error_rate
+
+  @property
+  def training_data(self):
+    return self._training_data
+
+  @property
+  def regular_training_labels(self):
+    return self._regular_training_labels
 
   def apply_mapping(self, mapping):
     return [mapping[label] for label in self.regular_training_labels]
