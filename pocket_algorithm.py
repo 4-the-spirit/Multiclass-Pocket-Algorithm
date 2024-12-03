@@ -4,14 +4,31 @@ from perceptron_algorithm import PerceptronAlgorithm
 
 
 class PocketAlgorithm(PerceptronAlgorithm):
+  """
+    Implementation of the Pocket Algorithm, which extends the Perceptron Algorithm.
+
+    The Pocket Algorithm ensures that the best-performing weights (those with the 
+    lowest error rate on the training data) are retained during the training process.
+    This makes it more robust than the basic Perceptron Algorithm in scenarios where
+    the data is not linearly separable.
+  """
+
   def __init__(self, training_data, training_labels):
     super().__init__(training_data, training_labels)
 
   def run(self, updates, max_epochs=1):
     """
-    For each iteration in the Pocket Algorithm in which the weights vector is updated
-    this method will execute until it reaches the number of updates or until the number
-    of maximum epochs was reached.
+        Trains the model using the Pocket Algorithm.
+
+        For each iteration in which the weights vector is updated, this method executes 
+        until it reaches the specified number of updates or the maximum number of epochs.
+
+        Args:
+            updates (int): The maximum number of updates to perform on the weights.
+            max_epochs (int): The maximum number of passes through the dataset.
+
+        Returns:
+            None
     """
     perceptron = PerceptronAlgorithm(self.training_data, self.training_labels)
     updates_count = 0
@@ -38,10 +55,11 @@ class PocketAlgorithm(PerceptronAlgorithm):
         perceptron.weights_vec = new_weights_vec
         perceptron.b = new_b
         updates_count += 1
-        print(f"Pocket Algorithm: {round((updates_count / updates) * 100, 2)} %")
+
+        if ((int(updates_count / updates) * 100) % 10 == 0):
+          print(f"Pocket Algorithm: {round((updates_count / updates) * 100, 2)} %")
 
       self.weights_vec = perceptron.weights_vec
       self.b = perceptron.b
 
     return None
-
