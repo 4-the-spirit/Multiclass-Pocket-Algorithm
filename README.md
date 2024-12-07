@@ -1,2 +1,2 @@
-# 🤖 Multiclass Perceptron Algorithm
+# 🤖 Multiclass Pocket Algorithm
 This repository offers a Python implementation of the Perceptron Algorithm and the Pocket Algorithm, designed to handle linearly inseparable data. These implementations are part of an exercise for the Machine Learning (20942) course. Additionally, the repository includes a version of the Pocket Algorithm adapted for multiclass classification problems. This implementation uses the One-Versus-All strategy to create k classifiers, each trained to distinguish one class from the others, where k represents the number of classes in the classification task.
