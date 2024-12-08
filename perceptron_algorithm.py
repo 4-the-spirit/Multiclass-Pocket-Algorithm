@@ -6,7 +6,7 @@ class PerceptronAlgorithm:
   """
     Implementation of the Perceptron Learning Algorithm.
 
-    This class handles binary classification tasks using the perceptron algorithm. 
+    This class handles binary classification tasks using the perceptron algorithm.
     The labels of the training data must be either 1 or -1.
 
     Attributes:
@@ -25,6 +25,7 @@ class PerceptronAlgorithm:
     self.training_labels = training_labels
     self.weights_vec = np.zeros(len(self.training_data[0]))
     self.b = 0
+    self.__error_data = None
 
   def from_parameters(self, weights_vec, b):
     """
