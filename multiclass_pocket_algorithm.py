@@ -5,12 +5,12 @@ class MultiClassPocketAlgorithm:
   """
     Implementation of a Multi-Class Classifier using the Pocket Algorithm.
 
-    This algorithm extends the binary classification Pocket Algorithm to handle 
+    This algorithm extends the binary classification Pocket Algorithm to handle
     multi-class classification problems by training a separate classifier for each class
     in a one-vs-all manner. The best weights and bias for each classifier are determined
     using the Pocket Algorithm.
   """
-  
+
   def __init__(self, training_data, regular_training_labels):
     self._training_data = training_data
     self._regular_training_labels = regular_training_labels
@@ -33,7 +33,7 @@ class MultiClassPocketAlgorithm:
 
   @weights_vec.setter
   def weights_vec(self, value):
-    self.weights_vec = value
+    self._weights_vec = value
 
   @property
   def b(self):
@@ -96,3 +96,16 @@ class MultiClassPocketAlgorithm:
 
   def classify(self, data):
     return self.classification_classes[self.argmax(data)]
+
+  @property
+  def confusion_matrix(self):
+    mat = np.zeros((len(self.classification_classes), len(self.classification_classes)), dtype="int")
+
+    for i in range(len(self.training_data)):
+      predicted_class = self.classify(self.training_data[i])
+      predicted_class_index = self.classification_classes.index(predicted_class)
+      actual_class = tuple(self.regular_training_labels[i].astype(int).tolist())
+      actual_class_index = self.classification_classes.index(actual_class)
+      mat[actual_class_index][predicted_class_index] += 1
+
+    return mat
