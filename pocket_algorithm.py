@@ -5,61 +5,61 @@ from perceptron_algorithm import PerceptronAlgorithm
 
 class PocketAlgorithm(PerceptronAlgorithm):
   """
-    Implementation of the Pocket Algorithm, which extends the Perceptron Algorithm.
+    An implementation of the Pocket Algorithm, extending the PerceptronAlgorithm.
+    The Pocket Algorithm is designed for binary classification, maintaining the
+    best weights and bias observed during training to handle non-linearly separable data.
 
-    The Pocket Algorithm ensures that the best-performing weights (those with the 
-    lowest error rate on the training data) are retained during the training process.
-    This makes it more robust than the basic Perceptron Algorithm in scenarios where
-    the data is not linearly separable.
+    Attributes:
+        training_data (ndarray): A 2D array where each row represents a feature vector for a training example.
+        training_labels (ndarray): A 1D array where each element represents the label (e.g., -1 or 1) of the corresponding training example.
+        weight_vector (ndarray): A 1D array representing the current weight vector of the model.
+        b (float): The current bias term of the model.
+        _errors (list): A list storing the error rates observed at different stages of training.
+
+    Inherits:
+        PerceptronAlgorithm: The base Perceptron algorithm, providing basic functionality for binary classification.
+
+    Methods:
+        (To be implemented in the full algorithm, such as running the Pocket Algorithm or accessing error rates.)
   """
-
   def __init__(self, training_data, training_labels):
     super().__init__(training_data, training_labels)
 
   def run(self, updates, max_epochs=1):
-    """
-        Trains the model using the Pocket Algorithm.
-
-        For each iteration in which the weights vector is updated, this method executes 
-        until it reaches the specified number of updates or the maximum number of epochs.
-
-        Args:
-            updates (int): The maximum number of updates to perform on the weights.
-            max_epochs (int): The maximum number of passes through the dataset.
-
-        Returns:
-            None
-    """
-    perceptron = PerceptronAlgorithm(self.training_data, self.training_labels)
     updates_count = 0
     epochs_count = 0
 
-    for i in itertools.cycle(range(len(self.training_data))):
-      if i == len(self.training_data) - 1:
-        epochs_count += 1
-      if updates_count >= updates or epochs_count >= max_epochs:
-        break
+    # Store initial error rate and weights as the best ones
+    self.best_error_rate = self.error_rate
+    self.best_weight_vector = self.weight_vector.copy()
+    self.best_b = self.b
 
-      old_weights_vec = perceptron.weights_vec.copy()
-      old_b = perceptron.b
+    for i in tqdm(itertools.cycle(range(len(self.training_data))), desc="Pocket Algorithm"):
+        if updates_count >= updates or epochs_count >= max_epochs:
+            break
 
-      perceptron.run(updates=1, max_epochs=1)
+        # If we reach the end of the data, increment epoch count
+        if i == len(self.training_data) - 1:
+            epochs_count += 1
 
-      new_weights_vec = perceptron.weights_vec.copy()
-      new_b = perceptron.b
+        # If the current sample is classified correctly, continue
+        if self.classify_single(self.training_data[i]) == self.training_labels[i]:
+            continue
 
-      old_error_rate = perceptron.from_parameters(old_weights_vec, old_b).error_rate
-      new_error_rate = perceptron.from_parameters(new_weights_vec, new_b).error_rate
+        # Run one update of the Perceptron
+        super().run(updates=1, max_epochs=1)
 
-      if new_error_rate < old_error_rate:
-        perceptron.weights_vec = new_weights_vec
-        perceptron.b = new_b
+        # After the update, calculate the current error rate
+        current_error_rate = self.error_rate
+
+        # If the new error rate is better (lower), update the pocket parameters
+        if current_error_rate < self.best_error_rate:
+            self.best_weight_vector = self.weight_vector.copy()
+            self.best_b = self.b
+            self.best_error_rate = current_error_rate
+
         updates_count += 1
 
-        if ((int(updates_count / updates) * 100) % 10 == 0):
-          print(f"Pocket Algorithm: {round((updates_count / updates) * 100, 2)} %")
-
-      self.weights_vec = perceptron.weights_vec
-      self.b = perceptron.b
-
+    # After finishing the updates, set the best weight vector and bias
+    self.update_parameters(self.best_weight_vector, self.best_b)
     return None
