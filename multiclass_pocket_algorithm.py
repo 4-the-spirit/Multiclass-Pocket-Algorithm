@@ -33,7 +33,7 @@ class MultiClassPocketAlgorithm:
   @property
   def error_rate(self):
     misclassified = 0
-    for i in tqdm(range(len(self.training_data))):
+    for i in range(len(self.training_data)):
       if self.classify_single(self.training_data[i]) != tuple(self.regular_training_labels[i].astype(int).tolist()):
         misclassified += 1
     return misclassified / len(self.training_data)
