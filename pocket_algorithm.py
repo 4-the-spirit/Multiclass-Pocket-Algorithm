@@ -34,7 +34,7 @@ class PocketAlgorithm(PerceptronAlgorithm):
     self.best_weight_vector = self.weight_vector.copy()
     self.best_b = self.b
 
-    for i in tqdm(itertools.cycle(range(len(self.training_data))), desc="Pocket Algorithm"):
+    for i in itertools.cycle(range(len(self.training_data))):
         if updates_count >= updates or epochs_count >= max_epochs:
             break
 
